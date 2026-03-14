@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
@@ -12,39 +12,37 @@ public class MusicPlayer : MonoBehaviour
     public Button nextSongButton;           // Next Song Button
     public Button previousSongButton;       // Previous Song Button
 
-    // Song list (updated with .ogg or .wav extensions removed)
+    // Song list (without file extensions)
     private string[] songs = {
-        "Black Noise Dreams",    // Song names without .ogg or .wav extension
-        "Coverless Lofi",
-        "Night Lofi",
-        "Cosmos",
-        "Lost in Time",
-        "Nature sounds",
-        "Kingdom is searching for New King",
-        "Pink Noise for Studying",
+        "Naturgeräusche",
+        "Nacht Lofi",
+        "Regenbogen",
         "Resonant",
+        "Rosa Geräusches",
+        "Sanftes Klavier",
+        "Schwarze Geräusche",
+        "Tagsüber Lo-Fi",
+        "Verloren in der Zeit",
+        "Wiegenlied",
     };
 
     private int currentSongIndex = 0;       // Current song index
+    private bool musicStarted = false;      // Track if music has started
 
     void Start()
     {
-        // Ensure there is an AudioSource attached
         if (audioSource == null)
         {
             Debug.LogError("No AudioSource attached to MusicPlayer!");
         }
 
         // Initialize button actions
-        nextSongButton.onClick.AddListener(NextSong);              // Next Song button
-        previousSongButton.onClick.AddListener(PreviousSong);      // Previous Song button
-        volumeSlider.onValueChanged.AddListener(AdjustVolume);    // Volume slider
+        nextSongButton.onClick.AddListener(NextSong);              
+        previousSongButton.onClick.AddListener(PreviousSong);      
+        volumeSlider.onValueChanged.AddListener(AdjustVolume);    
 
-        // Set the initial song text
+        // Set the initial song text but do not play
         songText.text = songs[currentSongIndex];
-
-        // Play the first song immediately when the game starts
-        PlaySong();
     }
 
     // Play the current song
@@ -56,54 +54,53 @@ public class MusicPlayer : MonoBehaviour
             return;
         }
 
-        // Log the current song being played
-        Debug.Log("Playing song: " + songs[currentSongIndex]);
-
-        // Load the current song from the Resources folder (without file extension)
+        // Load the current song from Resources folder
         AudioClip song = Resources.Load<AudioClip>("Songs/" + songs[currentSongIndex]);
-
-        // Check if the song is correctly loaded
         if (song == null)
         {
             Debug.LogError("Song not found: " + songs[currentSongIndex]);
             return;
         }
 
-        // Set the audio clip and play the song
         audioSource.clip = song;
         audioSource.Play();
-        songText.text = songs[currentSongIndex]; // Update song name
+        songText.text = songs[currentSongIndex];
+
+        musicStarted = true; // Mark that music has started
+        Debug.Log("Playing song: " + songs[currentSongIndex]);
     }
 
     // Go to the next song
     public void NextSong()
     {
-        // Update song index to the next song, looping back to the beginning if at the end
+        // If music hasn't started yet, start playing current song
+        if (!musicStarted)
+        {
+            PlaySong();
+            return;
+        }
+
         currentSongIndex = (currentSongIndex + 1) % songs.Length;
-
-        // Log the song index for debugging
         Debug.Log("Next song index: " + currentSongIndex);
-
-        // Play the next song
         PlaySong();
     }
 
     // Go to the previous song
     public void PreviousSong()
     {
-        // Update song index to the previous song, looping to the last song if at the start
+        if (!musicStarted) return; // Do nothing if music hasn't started
+
         currentSongIndex = (currentSongIndex - 1 + songs.Length) % songs.Length;
-
-        // Log the song index for debugging
         Debug.Log("Previous song index: " + currentSongIndex);
-
-        // Play the previous song
         PlaySong();
     }
 
     // Adjust the volume based on the slider value
     public void AdjustVolume(float volume)
     {
-        audioSource.volume = volume;  // Set the audio source volume
+        if (audioSource != null)
+        {
+            audioSource.volume = volume;
+        }
     }
 }

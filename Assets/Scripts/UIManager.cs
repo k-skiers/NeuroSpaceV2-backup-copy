@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro; // Only if you're using TextMeshPro
 
@@ -182,22 +182,22 @@ public class UIManager : MonoBehaviour
         // Teleport player and rotate camera based on the location
         switch (locationName)
         {
-            case "Bedroom":
+            case "Schlafzimmer":
                 TeleportToLocation(bedroomPosition, bedroomCameraRotation);
                 break;
-            case "Kitchen":
+            case "Küche":
                 TeleportToLocation(kitchenPosition, kitchenCameraRotation);
                 break;
-            case "Living Room":
+            case "Wohnzimmer":
                 TeleportToLocation(livingRoomPosition, livingRoomCameraRotation);
                 break;
-            case "Meadow":
+            case "Blumenwiese":
                 TeleportToLocation(meadowPosition, meadowCameraRotation);
                 break;
-            case "Forest":
+            case "Wald":
                 TeleportToLocation(forestPosition, forestCameraRotation);
                 break;
-            case "Riverside":
+            case "Strand":
                 TeleportToLocation(riversidePosition, riversideCameraRotation);
                 break;
             default:
